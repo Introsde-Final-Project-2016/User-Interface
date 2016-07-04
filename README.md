@@ -36,4 +36,6 @@ This application just provides service with basic console but it can work better
 There is just weight height and BMI values in the system but there are lots of other measures related with body and health. Such as blood pressure. These features can be added to the application and they can be monitored every day. This system can have connection with the family doctor of the user which can suggest goals, foods, or some restrictions in the users daily life. 
 Also this application works for just one user, the login and sign-in interfaces could be done as future improvement to support a lot of user at the same time. 
 
+##To run the code
+go to file inside the terminal and run "ant start" command
 
