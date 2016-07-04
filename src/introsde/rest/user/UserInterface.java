@@ -3,7 +3,7 @@ package introsde.rest.user;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
+
 import java.util.Scanner;
 
 import javax.ws.rs.client.Client;
@@ -12,43 +12,41 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import org.glassfish.jersey.client.ClientConfig;
+
 import org.json.*;
 
 public class UserInterface {
 
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 		Scanner input = new Scanner(System.in);
-		String name = null;
-		int operation = -1;
+		int choice = -1;
 
-		System.out.println("Welcome APP!");
-		System.out.println(" ");
+		System.out.println("WELCOME TO HEALTH APP!\n");
 
-		while (operation != 0) {
-			System.out.println("\nMENU'\n");
-			System.out.println("6 - did you reach your goal?");
-			System.out.println("5 - update LS ");
-			System.out.println("4 - update goal ");
-			System.out.println("3 - Print User Details ");
-			System.out.println("2 - Print all the LS ");
-			System.out.println("1 - Print all the current goals ");
-			System.out.println("0 - Exit");
-
+		while (choice != 0) {
+			System.out.println("HEALTH MENU'\n");
+			System.out.println("0 - Close the APP");
+			System.out.println("1 - Print All The Current Goals ");
+			System.out.println("2 - Print All The Current Life Status ");
+			System.out.println("3 - Print My User Details ");
+			System.out.println("4 - Update Goal ");
+			System.out.println("5 - Update Life Status ");
+			System.out.println("6 - Did You Reach Your Goal?");
 			System.out.print("\nHow do you want to proceed?\n");
-			operation = Integer.parseInt(input.nextLine());
+			choice = Integer.parseInt(input.nextLine());
 
-			if (operation < 0 || operation > 6) {
-				System.out.print("\nOperation not allowed, try again!\n\n");
+			if (choice < 0 || choice > 6) {
+				System.out.print("\nPlease enter a number between 0 and 6!\n\n");
 			}
 
-			switch (operation) {
+			switch (choice) {
 				case 0:
 					System.out.println("\nHope to see you soon!");
 					break;
@@ -101,9 +99,11 @@ public class UserInterface {
 			
 			
 			
-			}//swithc
-			    	}//while
-			 }//main
+			}// End of switch
+			    	}// End of while
+		
+			 input.close();
+			 }// End of main
 	
 	public static void getLifeStatus() throws IOException
 	{
@@ -129,7 +129,7 @@ public class UserInterface {
                 System.out.println("");
             }
         }		
-	}// getLS
+	}// End of Get LS
 	
 	public static String getGoals() throws IOException
 	{
@@ -159,7 +159,7 @@ public class UserInterface {
         }
 		return result.toString();
 		
-	}// getgoals
+	}// End of Get Goals
 	
 	public static void getUserDetails() throws IOException
 	{
@@ -190,7 +190,7 @@ public class UserInterface {
         }
 	
 		
-	}//userdetails
+	}// End of User Details
 	
 	
 	public static void updateGoal(String goalid, String value, String name) throws IOException
@@ -202,7 +202,6 @@ public class UserInterface {
 	Response res4 = null;
 	String putResp4 = null;
 	String updateGoal ="{" + "\"goalValue\": " + value + "," + "\"goalName\": \"" + name + "\"" + "}";
-          //  + "\"idGoal\": \"" + "" + "\"" + "}";
 	
 	res4 = service4.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(updateGoal));
 	putResp4 = res4.readEntity(String.class);
@@ -213,7 +212,7 @@ public class UserInterface {
 	}else{
 		System.out.println("Goal updated successfully!");
 	}
-}// goalupdate
+}// End of Goal Update
 
 	public static void updateLS(String LsId, String LsName, String LsValue) throws IOException
 	{
@@ -235,8 +234,8 @@ public class UserInterface {
 	}else{
 		System.out.println("Goal updated successfully!");
 		System.out.println("The system automatically put a new goal for you check the first goal!!");
-	}//end of else
-}//end of updateLS
+	}//End of else
+}// End of updateLS
 	
 	public static void checkGoal(String goalid, String value) throws IOException
 	{
@@ -267,10 +266,10 @@ public class UserInterface {
         System.out.println("YOUR MOTIVAVION MESSAGE IS" + message +" by author:" +author);
         System.out.println((Integer.parseInt(goalValue)-Integer.parseInt(value))+o.getJSONObject(Integer.parseInt(goalid)-1).getString("measureType")+"LEFT" );
         }
-}// checkgoal
+}// End of Check goal
 	
 	
 	
 	
-}//end of class
+}//End of class
 
