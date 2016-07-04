@@ -31,7 +31,7 @@ public class UserInterface {
 		System.out.println("WELCOME TO HEALTH APP!\n");
 
 		while (choice != 0) {
-			System.out.println("HEALTH MENU'\n");
+			System.out.println("HEALTH MENU\n");
 			System.out.println("0 - Close the APP");
 			System.out.println("1 - Print All The Current Goals ");
 			System.out.println("2 - Print All The Current Life Status ");
@@ -39,7 +39,7 @@ public class UserInterface {
 			System.out.println("4 - Update Goal ");
 			System.out.println("5 - Update Life Status ");
 			System.out.println("6 - Did You Reach Your Goal?");
-			System.out.print("\nHow do you want to proceed?\n");
+			System.out.print("\nPlease chose one of the options above to continue?\n");
 			choice = Integer.parseInt(input.nextLine());
 
 			if (choice < 0 || choice > 6) {
@@ -48,7 +48,7 @@ public class UserInterface {
 
 			switch (choice) {
 				case 0:
-					System.out.println("\nHope to see you soon!");
+					System.out.println("\nSee you soon! Do not forget to enter you daily goal results!");
 					break;
 				
                 case 1:
@@ -64,212 +64,194 @@ public class UserInterface {
                 	break;
 
                 case 4:
-                	System.out.println("Which goal do you want to update?");
                 	UserInterface.getGoals();
-                	System.out.println("Please Enter the id of the Goal");
+                	System.out.println("\nWhich goal do you want to update?");
+                	System.out.println("\nPlease enter the ID of your goal listed above!");
                 	String goalId = input.nextLine(); 	
-                	System.out.println("Insert new goal name: ");
+                	System.out.println("Insert the name of your new goal : ");
 		  			String goalname = input.nextLine();
-                	System.out.println("Insert new goal value: ");
+                	System.out.println("Insert the value of your new goal : ");
 		  			String goalvalue = input.nextLine();
 		  			UserInterface.updateGoal(goalId, goalvalue, goalname);
 		  			break;
 			
                 case 5:
-                	System.out.println("Which LS do you want to update?");
                 	UserInterface.getLifeStatus();
-                	System.out.println("Please Enter the id of the LS");
+                	System.out.println("\nWhich life status do you want to update?");
+                	System.out.println("\nPlease enter the ID of your life status listed above!");
                 	String LsId = input.nextLine(); 	
-                	System.out.println("Insert new LS name: ");
+                	System.out.println("Insert the name of your new life status : ");
 		  			String measureName = input.nextLine();
-                	System.out.println("Insert new LS value: ");
+                	System.out.println("Insert the value of your new life status: ");
 		  			String measureValue = input.nextLine();
 		  			UserInterface.updateLS(LsId, measureName, measureValue);
 		  			break;
 		  			
                 case 6:
-                	System.out.println("Did you reach any of your goal?");
-                	UserInterface.getGoals();
-                	System.out.println("Please Enter the id of the Goal");
+                	System.out.println("Did you reach any of your goal today? Check them now!");
+                	String goals = UserInterface.getGoals();
+                	System.out.println("Please enter the ID of your goal listed above!");
                 	String goalId2 = input.nextLine(); 	
-                	System.out.println("How much are you done? (kg/hours/km");
+                	JSONArray o = new JSONArray(goals);
+                	String measure = o.getJSONObject(Integer.parseInt(goalId2)-1).getString("measureType");
+                	String type = o.getJSONObject(Integer.parseInt(goalId2)-1).getString("goalName");
+                	System.out.println("Please enter how many " +measure+ " did you " + type + " today?");
 		  			String achievement = input.nextLine();
 		  			UserInterface.checkGoal(goalId2, achievement);                	
                 	break;
 			
-			
-			
-			}// End of switch
-			    	}// End of while
+						}// End of switch
+			    }// End of while
 		
 			 input.close();
-			 }// End of main
+		}// End of main
 	
 	public static void getLifeStatus() throws IOException
-	{
-		String ENDPOINT2 = "https://immense-mountain-93541.herokuapp.com/introsde/user/getLifeStatus";
-        DefaultHttpClient client2 = new DefaultHttpClient();
-        HttpGet request2 = new HttpGet(ENDPOINT2);
-        HttpResponse response2 = client2.execute(request2);
-        BufferedReader rd2 = new BufferedReader(new InputStreamReader(response2.getEntity().getContent()));
-        StringBuffer result2 = new StringBuffer();
-        String line2 = "";
-        while ((line2 = rd2.readLine()) != null) {
-            result2.append(line2);
-        }
-        JSONArray o2 = new JSONArray(result2.toString());
-        if (response2.getStatusLine().getStatusCode() == 200) {
-            System.out.println("***********************************************");
-            System.out.println("USER'S GOALS");
-            System.out.println("***********************************************");
-            for(int i = 0; i < o2.length(); i++){
-            	System.out.println("idmeasure: "+o2.getJSONObject(i).getInt("idMeasure"));
-                System.out.println("measureName: "+o2.getJSONObject(i).getString("measureName"));
-                System.out.println("value: "+o2.getJSONObject(i).getString("value"));
-                System.out.println("");
-            }
-        }		
-	}// End of Get LS
-	
-	public static String getGoals() throws IOException
-	{
-    	String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getGoals";
-
+		{
+		String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getLifeStatus";
         DefaultHttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(ENDPOINT);
         HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer result = new StringBuffer();
         String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
+        	while ((line = br.readLine()) != null) {	result.append(line);	}
         JSONArray o = new JSONArray(result.toString());
         if (response.getStatusLine().getStatusCode() == 200) {
-            System.out.println("***********************************************");
-            System.out.println("USER'S GOALS");
-            System.out.println("***********************************************");
+            System.out.println("-----------------------------------------------");
+            System.out.println("YOUR CURRENT LIFE STATUS");
+            System.out.println("-----------------------------------------------");
             for(int i = 0; i < o.length(); i++){
-                System.out.println("idGoal: "+o.getJSONObject(i).getInt("idGoal"));
-                System.out.println("goalName: "+o.getJSONObject(i).getString("goalName"));
-                System.out.println("measureType: "+o.getJSONObject(i).getString("measureType"));
-                System.out.println("goalValue: "+o.getJSONObject(i).getString("goalValue"));
-                System.out.println("");
-            }
-        }
+            	System.out.println("ID: " + o.getJSONObject(i).getInt("idMeasure"));
+            	System.out.println("Measure Name: " + o.getJSONObject(i).getString("measureName"));
+            	System.out.println("Measure Value: " + o.getJSONObject(i).getString("value") + "\n");
+            	}
+        	}		
+		}// End of Get LS
+	
+	
+	public static String getGoals() throws IOException
+		{
+    	String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getGoals";
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(ENDPOINT);
+        HttpResponse response = client.execute(request);
+        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuffer result = new StringBuffer();
+        String line = "";
+        while ((line = br.readLine()) != null) {	result.append(line);	}
+        JSONArray o = new JSONArray(result.toString());
+        if (response.getStatusLine().getStatusCode() == 200) {
+        	System.out.println("-----------------------------------------------");
+            System.out.println("YOUR CURRENT GOALS");
+            System.out.println("-----------------------------------------------");
+            for(int i = 0; i < o.length(); i++){
+                System.out.println("ID: "+o.getJSONObject(i).getInt("idGoal"));
+                System.out.println("Goal Name: " + o.getJSONObject(i).getString("goalName"));
+                System.out.println("Goal Value: " + o.getJSONObject(i).getString("goalValue"));
+                System.out.println("Measure Type: " + o.getJSONObject(i).getString("measureType") + "\n");
+            	}
+        	}
 		return result.toString();
-		
-	}// End of Get Goals
+		}// End of Get Goals
 	
 	public static void getUserDetails() throws IOException
-	{
-		String ENDPOINT3 = "https://immense-mountain-93541.herokuapp.com/introsde/user/getDetail";
-
-        DefaultHttpClient client3 = new DefaultHttpClient();
-        HttpGet request3 = new HttpGet(ENDPOINT3);
-        HttpResponse response3 = client3.execute(request3);
-        BufferedReader rd3 = new BufferedReader(new InputStreamReader(response3.getEntity().getContent()));
-        StringBuffer result3 = new StringBuffer();
-        String line3 = "";
-        while ((line3 = rd3.readLine()) != null) {
-            result3.append(line3);
-        }
-        JSONObject o3 = new JSONObject(result3.toString());
-        if (response3.getStatusLine().getStatusCode() == 200) {
-            System.out.println("***********************************************");
-            System.out.println("USER'S GOALS");
-            System.out.println("***********************************************");
-            
-                System.out.println("MeasureNames: "+o3.getInt("age"));
-                System.out.println("MeasureNames: "+o3.getString("gender"));
-                System.out.println("MeasureNames: "+o3.getString("email"));
-                System.out.println("MeasureNames: "+o3.getString("name"));
-                System.out.println("MeasureNames: "+o3.getString("lastname"));                            
-                System.out.println("");
-            
-        }
-	
-		
-	}// End of User Details
+		{
+		String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getDetail";
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(ENDPOINT);
+        HttpResponse response = client.execute(request);
+        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuffer result = new StringBuffer();
+        String line = "";
+        while ((line = br.readLine()) != null) {	result.append(line);	}
+        JSONObject o = new JSONObject(result.toString());
+        if (response.getStatusLine().getStatusCode() == 200) {
+        	System.out.println("-----------------------------------------------");
+            System.out.println("YOUR USER INFORMATION");
+            System.out.println("-----------------------------------------------");
+            System.out.println("Your Name: " + o.getString("name"));
+            System.out.println("Your Lastname: " + o.getString("lastname"));                            
+            System.out.println("Your Age: " + o.getInt("age"));
+            System.out.println("Your Gender: " + o.getString("gender"));
+            System.out.println("Your Email: " + o.getString("email"));
+            System.out.println("");
+        	}		
+		}// End of User Details
 	
 	
 	public static void updateGoal(String goalid, String value, String name) throws IOException
 	{
 	String ENDPOINT = "https://secure-refuge-96261.herokuapp.com/introsde/user/updategoal/"+goalid;
-	ClientConfig clientConfig4 = new ClientConfig();
-	Client client4 = ClientBuilder.newClient(clientConfig4);
-	WebTarget service4 = client4.target(ENDPOINT);
-	Response res4 = null;
-	String putResp4 = null;
+	ClientConfig clientConfig = new ClientConfig();
+	Client client = ClientBuilder.newClient(clientConfig);
+	WebTarget service = client.target(ENDPOINT);
+	Response response = null;
+	String putResp = null;
 	String updateGoal ="{" + "\"goalValue\": " + value + "," + "\"goalName\": \"" + name + "\"" + "}";
-	
-	res4 = service4.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(updateGoal));
-	putResp4 = res4.readEntity(String.class);
-	System.out.println(updateGoal);
-
-	if(res4.getStatus() != 200 ){
-		System.out.println("ERROR while updating! Please, try again!");
-	}else{
-		System.out.println("Goal updated successfully!");
-	}
-}// End of Goal Update
+	response = service.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(updateGoal));
+	putResp = response.readEntity(String.class);
+	System.out.println("\n" + updateGoal);
+		if(response.getStatus() != 200 ){
+			System.out.println("ERROR while updating goal! Type=" +response.getStatus());
+			}
+		else{
+			System.out.println("Your goal updated successfully! \n");
+			}
+	}// End of Goal Update
 
 	public static void updateLS(String LsId, String LsName, String LsValue) throws IOException
 	{
-	String ENDPOINT5 = "https://secure-refuge-96261.herokuapp.com/introsde/user/updateLs/"+LsId;
-	ClientConfig clientConfig5 = new ClientConfig();
-	Client client5 = ClientBuilder.newClient(clientConfig5);
-	WebTarget service5 = client5.target(ENDPOINT5);
-	Response res5 = null;
-	String putResp5 = null;
+	String ENDPOINT = "https://secure-refuge-96261.herokuapp.com/introsde/user/updateLs/"+LsId;
+	ClientConfig clientConfig = new ClientConfig();
+	Client client = ClientBuilder.newClient(clientConfig);
+	WebTarget service = client.target(ENDPOINT);
+	Response response = null;
+	String putResp = null;
 	String updateLStatus ="{" + "\"value\": " + LsValue + "," + "\"measureName\": \"" + LsName + "\"" + "}";	
-
-	res5 = service5.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(updateLStatus));
-	putResp5 = res5.readEntity(String.class);
+	response = service.request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(updateLStatus));
+	putResp = response.readEntity(String.class);
 	System.out.println(updateLStatus);
-
-
-	if(res5.getStatus() != 200 ){
-		System.out.println("ERROR while updating!"+res5.getStatus());
-	}else{
-		System.out.println("Goal updated successfully!");
-		System.out.println("The system automatically put a new goal for you check the first goal!!");
-	}//End of else
-}// End of updateLS
+		if(response.getStatus() != 200 ){
+			System.out.println("ERROR while updating life status! Type="+response.getStatus());
+			}
+		else{
+			System.out.println("Your life status updated successfully!");
+			System.out.println("According to your new life status, the system automatically set your new Bmi value!");
+			System.out.println("According to your new life status, the system automatically set a new goal for you!");
+			System.out.println("Check your new first goal!\n");
+			}
+	}// End of updateLS
 	
 	public static void checkGoal(String goalid, String value) throws IOException
-	{
+		{
 		String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getQuote";
-
         DefaultHttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(ENDPOINT);
         HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer result = new StringBuffer();
         String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-        
-        JSONObject o2 = new JSONObject(result.toString());
-        String message = o2.getString("quote");
-        String author = o2.getString("author");
+        while ((line = br.readLine()) != null) {	result.append(line);	}
+        JSONObject ob = new JSONObject(result.toString());
+        String message = ob.getString("quote");
+        String author = ob.getString("author");
         String glist= UserInterface.getGoals();
         JSONArray o = new JSONArray(glist);
         String goalValue = o.getJSONObject(Integer.parseInt(goalid)-1).getString("goalValue");
-        if(Integer.parseInt(value)>=Integer.parseInt(goalValue))
-        {
-        	 System.out.println("CONGRATULATIONS YOU DID IT");
-        }
-        else{        
-        System.out.println("YOU CAN DO IT");
-        System.out.println("YOUR MOTIVAVION MESSAGE IS" + message +" by author:" +author);
-        System.out.println((Integer.parseInt(goalValue)-Integer.parseInt(value))+o.getJSONObject(Integer.parseInt(goalid)-1).getString("measureType")+"LEFT" );
-        }
-}// End of Check goal
-	
-	
-	
+        String measureType = o.getJSONObject(Integer.parseInt(goalid)-1).getString("measureType");
+        int val1 = Integer.parseInt(value);
+        int val2 = Integer.parseInt(goalValue);
+        	if(val1 >= val2)
+        	{
+        	 System.out.println("CONGRATULATIONS YOU HAVE REACHED TO YOUR GOAL\n");
+        	}
+        	else{        
+        	System.out.println("DONT GIVE UP! YOU CAN DO IT!\n");
+        	System.out.println("YOUR MOTIVAVION MESSAGE IS:\n" + message +"\nby author: " +author);
+        	System.out.println("JUST " + (val2-val1) + " " + measureType + " LEFT TO REACH YOUR GOAL" );
+        	}
+		}// End of Check goal
 	
 }//End of class
 
