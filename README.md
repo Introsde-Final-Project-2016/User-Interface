@@ -4,7 +4,7 @@
 
 ## System Architecture Schema
 
-Picture 
+![](https://github.com/Introsde-Final-Project-2016/User-Interface/blob/master/Architecture.png)
 
 ## External Adapter Service
 
