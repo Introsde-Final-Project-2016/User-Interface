@@ -1,9 +1,6 @@
 package introsde.rest.user;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
 import java.util.Scanner;
 
 import javax.ws.rs.client.Client;
@@ -13,13 +10,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import org.glassfish.jersey.client.ClientConfig;
-
 import org.json.*;
 
 public class UserInterface {
@@ -106,18 +98,17 @@ public class UserInterface {
 			 input.close();
 		}// End of main
 	
+	// take life status and print
 	public static void getLifeStatus() throws IOException
 		{
 		String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getLifeStatus";
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(ENDPOINT);
-        HttpResponse response = client.execute(request);
-        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        	while ((line = br.readLine()) != null) {	result.append(line);	}
-        JSONArray o = new JSONArray(result.toString());
-        if (response.getStatusLine().getStatusCode() == 200) {
+		ClientConfig clientConfig = new ClientConfig();
+		Client client = ClientBuilder.newClient(clientConfig);
+		WebTarget service = client.target(ENDPOINT);
+		Response response = service.request().accept(MediaType.APPLICATION_JSON).get();
+		String body = response.readEntity(String.class);
+		JSONArray o = new JSONArray(body);
+			if(response.getStatus() == 200 ){
             System.out.println("-----------------------------------------------");
             System.out.println("YOUR CURRENT LIFE STATUS");
             System.out.println("-----------------------------------------------");
@@ -129,19 +120,17 @@ public class UserInterface {
         	}		
 		}// End of Get LS
 	
-	
+	// take goals and print
 	public static String getGoals() throws IOException
 		{
     	String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getGoals";
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(ENDPOINT);
-        HttpResponse response = client.execute(request);
-        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = br.readLine()) != null) {	result.append(line);	}
-        JSONArray o = new JSONArray(result.toString());
-        if (response.getStatusLine().getStatusCode() == 200) {
+		ClientConfig clientConfig = new ClientConfig();
+		Client client = ClientBuilder.newClient(clientConfig);
+		WebTarget service = client.target(ENDPOINT);
+		Response response = service.request().accept(MediaType.APPLICATION_JSON).get();
+		String body = response.readEntity(String.class);
+		JSONArray o = new JSONArray(body);
+			if(response.getStatus() == 200 ){
         	System.out.println("-----------------------------------------------");
             System.out.println("YOUR CURRENT GOALS");
             System.out.println("-----------------------------------------------");
@@ -152,21 +141,20 @@ public class UserInterface {
                 System.out.println("Measure Type: " + o.getJSONObject(i).getString("measureType") + "\n");
             	}
         	}
-		return result.toString();
+		return body;
 		}// End of Get Goals
 	
+	// take user details and print 
 	public static void getUserDetails() throws IOException
 		{
 		String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getDetail";
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(ENDPOINT);
-        HttpResponse response = client.execute(request);
-        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = br.readLine()) != null) {	result.append(line);	}
-        JSONObject o = new JSONObject(result.toString());
-        if (response.getStatusLine().getStatusCode() == 200) {
+		ClientConfig clientConfig = new ClientConfig();
+		Client client = ClientBuilder.newClient(clientConfig);
+		WebTarget service = client.target(ENDPOINT);
+		Response response = service.request().accept(MediaType.APPLICATION_JSON).get();
+		String body = response.readEntity(String.class);
+		JSONObject o = new JSONObject(body);
+			if(response.getStatus() == 200 ){
         	System.out.println("-----------------------------------------------");
             System.out.println("YOUR USER INFORMATION");
             System.out.println("-----------------------------------------------");
@@ -179,7 +167,7 @@ public class UserInterface {
         	}		
 		}// End of User Details
 	
-	
+	// update goals
 	public static void updateGoal(String goalid, String value, String name) throws IOException
 	{
 	String ENDPOINT = "https://secure-refuge-96261.herokuapp.com/introsde/user/updategoal/"+goalid;
@@ -200,6 +188,7 @@ public class UserInterface {
 			}
 	}// End of Goal Update
 
+	// update life status
 	public static void updateLS(String LsId, String LsName, String LsValue) throws IOException
 	{
 	String ENDPOINT = "https://secure-refuge-96261.herokuapp.com/introsde/user/updateLs/"+LsId;
@@ -223,17 +212,16 @@ public class UserInterface {
 			}
 	}// End of updateLS
 	
+	// check if you reached the goal if yes take congrats if no take motivational message
 	public static void checkGoal(String goalid, String value) throws IOException
 		{
 		String ENDPOINT = "https://immense-mountain-93541.herokuapp.com/introsde/user/getQuote";
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(ENDPOINT);
-        HttpResponse response = client.execute(request);
-        BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = br.readLine()) != null) {	result.append(line);	}
-        JSONObject ob = new JSONObject(result.toString());
+		ClientConfig clientConfig = new ClientConfig();
+		Client client = ClientBuilder.newClient(clientConfig);
+		WebTarget service = client.target(ENDPOINT);
+		Response response = service.request().accept(MediaType.APPLICATION_JSON).get();
+		String body = response.readEntity(String.class);
+		JSONObject ob = new JSONObject(body);
         String message = ob.getString("quote");
         String author = ob.getString("author");
         String glist= UserInterface.getGoals();
@@ -244,7 +232,7 @@ public class UserInterface {
         int val2 = Integer.parseInt(goalValue);
         	if(val1 >= val2)
         	{
-        	 System.out.println("CONGRATULATIONS YOU HAVE REACHED TO YOUR GOAL\n");
+        	 System.out.println("CONGRATULATIONS YOU HAVE REACHED TO YOUR GOAL!\n");
         	}
         	else{        
         	System.out.println("DONT GIVE UP! YOU CAN DO IT!\n");
